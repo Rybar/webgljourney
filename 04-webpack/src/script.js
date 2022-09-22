@@ -17,11 +17,55 @@ const parameters = {
 //scene
 const scene = new THREE.Scene()
 const canvas = document.querySelector('canvas')
+
+//textures
+const loadingManager = new THREE.LoadingManager()
+const textureLoader = new THREE.TextureLoader(loadingManager)
+loadingManager.onStart = () =>
+{
+    console.log('loading started')
+}
+loadingManager.onLoad = () =>
+{
+    console.log('loading finished')
+}
+loadingManager.onProgress =() =>
+{
+    console.log('loading in progress')
+}
+loadingManager.onError = () =>
+{
+    console.log('loading error')
+}
+const colorTexture = textureLoader.load('/textures/checkerboard-1024x1024.png')
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const heightTexture = textureLoader.load('/textures/door/height.jpg')
+const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const normalTexture = textureLoader.load('/textures/door/normal.jpg')
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
+const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
+
 //materials
-const material = new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true})
+const material = new THREE.MeshStandardMaterial({color: 0x888888, wireframe: false, shininess: 100})
+const woodMaterial = new THREE.MeshBasicMaterial({map: colorTexture})
+const matcapMaterial = new THREE.MeshMatcapMaterial({matcap: matcapTexture})
+
+//lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+scene.add(ambientLight)
+const pointLight = new THREE.PointLight(0xffffff, 0.5)
+pointLight.position.x = 2
+pointLight.position.y = 3
+pointLight.position.z = 4
+scene.add(pointLight)
+
+
+
 //objects
 const group = new THREE.Group()
-group.scale.y = 2
+//.scale.y = 2
 group.rotation.y = 0.2
 scene.add(group)
 
@@ -32,22 +76,18 @@ const cube1 = new THREE.Mesh(
 cube1.position.x = -1.5
 group.add(cube1)
 
-//bufferGeometry
-const geometry = new THREE.BufferGeometry()
-const count = 50
-const positionsArray = new Float32Array(count * 3 * 3)
-for (let i = 0; i < count * 3 * 3; i++)
-{
-    positionsArray[i] = (Math.random() - 0.5) * 4
-}
-const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
-geometry.setAttribute('position', positionsAttribute)
-const triangle = new THREE.Mesh(
-    geometry,
+const ball1 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.5, 16, 16),
     material
-  
 )
-group.add(triangle)
+group.add(ball1)
+
+const torus = new THREE.Mesh(
+    new THREE.TorusGeometry(0.3, 0.2, 16, 32),
+    matcapMaterial
+)
+torus.position.x = 2
+group.add(torus)
 
 //axes helper
 const axesHelper = new THREE.AxesHelper(2)
@@ -124,6 +164,8 @@ gui.addColor(parameters, 'color').onChange(() =>
     material.color.set(parameters.color)
 })
 gui.add(parameters, 'spin')
+gui.add(material, 'metalness').min(0).max(1).step(0.0001)
+gui.add(material, 'roughness').min(0).max(1).step(0.0001)
 
 
 //animate
@@ -135,6 +177,8 @@ const tick = () =>
     //camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
     //camera.position.y = cursor.y * 5
     //camera.lookAt(group.position)
+    cube1.rotation.y = 0.1 * elapsedTime
+    torus.rotation.y = 0.1 * elapsedTime
     renderer.render(scene, camera)
     controls.update()
     window.requestAnimationFrame(tick)
