@@ -37,15 +37,15 @@ loadingManager.onError = () =>
 {
     console.log('loading error')
 }
-const colorTexture = textureLoader.load('/textures/checkerboard-1024x1024.png')
-const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
-const heightTexture = textureLoader.load('/textures/door/height.jpg')
-const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
-const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
-const normalTexture = textureLoader.load('/textures/door/normal.jpg')
-const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
-const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
+const colorTexture = textureLoader.load('textures/checkerboard-1024x1024.png')
+const alphaTexture = textureLoader.load('textures/door/alpha.jpg')
+const heightTexture = textureLoader.load('textures/door/height.jpg')
+const ambientOcclusionTexture = textureLoader.load('textures/door/ambientOcclusion.jpg')
+const metalnessTexture = textureLoader.load('textures/door/metalness.jpg')
+const normalTexture = textureLoader.load('textures/door/normal.jpg')
+const roughnessTexture = textureLoader.load('textures/door/roughness.jpg')
+const matcapTexture = textureLoader.load('textures/matcaps/1.png')
+const gradientTexture = textureLoader.load('textures/gradients/3.jpg')
 
 //materials
 const material = new THREE.MeshStandardMaterial({color: 0x888888, wireframe: false, shininess: 100})
